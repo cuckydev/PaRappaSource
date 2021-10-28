@@ -7,6 +7,7 @@ SRCS = \
 	src/prvdatal.c \
 	src/prmain.c \
 	src/prmemory.c \
+	src/prrap.c \
 	mips/common/crt0/crt0.s
 
 CPPFLAGS += -Wall -Wextra -pedantic -mno-check-zero-division
