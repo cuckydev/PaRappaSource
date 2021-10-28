@@ -1,5 +1,4 @@
-#include <sys/types.h>
-#include <stdlib.h>
+#include "prmain.h"
 
 #include <libapi.h>
 #include <libetc.h>
@@ -10,12 +9,12 @@
 
 #include <libsnd.h>
 
-#include "macros.h"
 #include "prcd.h"
-#include "prvdata1.h"
+#include "prvdatal.h"
+#include "prmemory.h"
 
 //Version control ID
-static ATTR_USED const char rcsid[] = "@(#)prmain.c: version 01-00 95/10/10 00:00:00";
+static const char rcsid[] ATTR_USED = "@(#)prmain.c: version 01-00 95/10/10 00:00:00";
 
 //Gfx functions
 void Gfx_ClearScreen(u_char r, u_char g, u_char b) //FUN_8001b1b0
@@ -88,7 +87,7 @@ void System_Init(void) //FUN_800154f4
 	SetMem(2);
 	ResetCallback();
 	Gfx_Init();
-	//FUN_80025a00();
+	Memory_Init();
 	CD_Init();
 	Sfx_Init();
 	Debug_LoadFont();
@@ -99,13 +98,13 @@ void System_Init(void) //FUN_800154f4
 //Stage 0 functions
 void Stage0_Load(void)
 {
-	
+	CD_File_Read(&vdata_s0_common_int, 0);
 }
 
 //Game loop function
 void Game_Loop(void) //FUN_80027fac
 {
-	CD_File_Read(&vdata_s0_common_int, 0);
+	Stage0_Load();
 }
 
 //Entry point

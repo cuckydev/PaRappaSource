@@ -2,9 +2,10 @@ TARGET = parappa
 TYPE = ps-exe
 
 SRCS = \
-	src/prmain.c \
 	src/prcd.c \
-	src/prvdata1.c \
+	src/prvdatal.c \
+	src/prmain.c \
+	src/prmemory.c \
 	mips/common/crt0/crt0.s
 
 CPPFLAGS += -Wall -Wextra -pedantic -mno-check-zero-division
