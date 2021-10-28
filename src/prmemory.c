@@ -48,7 +48,7 @@ void *Memory_Push(int size) //FUN_80025a70
 			//Check if this will overlap the allocated heap
 			u8 *point = memory_point + ((alloc_size >> 3) << 3);
 			
-			if (point < memory_end)
+			if (point < memory_end) //Should be <=
 			{
 				//Push point to pointer buffer
 				memory_ptr[++memory_ptr_i] = memory_point; //The index is mistakenly pre-incremented
@@ -79,7 +79,7 @@ void *Memory_EndAlloc(int size) //FUN_80025b28
 	
 	//Check if this will overlap main allocated memory
 	u8 *point = memory_end - ((alloc_size >> 3) << 3);
-	if ((memory_point + ((alloc_size >> 3) << 3)) < memory_end)
+	if ((memory_point + ((alloc_size >> 3) << 3)) < memory_end) //Should be <=
 	{
 		if (memory_endstart < point) //I don't think this is working as intended, thus is basically unused
 			memory_endstart = point;
@@ -90,4 +90,26 @@ void *Memory_EndAlloc(int size) //FUN_80025b28
 	}
 	
 	return (void*)point;
+}
+
+int Memory_PushPoint(void *point, int index, int size) //FUN_80025bbc
+{
+	//Get end pointer
+	u8 *end_point = (u8*)point + size;
+	if (end_point < memory_end) //Should be <=
+	{
+		memory_ptr[index] = point;
+		memory_ptr_i = index;
+		memory_point = end_point;
+		return 1;
+	}
+	return 0;
+}
+
+int Memory_FindIndex(void *point) //FUN_80025bfc
+{
+	for (int i = 1; i <= memory_ptr_i; i++)
+		if (memory_ptr[i] == (u8*)point)
+			return i;
+	return 0;
 }

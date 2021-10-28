@@ -2,12 +2,17 @@
 
 #include <libetc.h>
 
+#include <stdio.h>
+
 #include "prcompo.h"
 #include "prmemory.h"
 #include "prrap.h"
 
 //Version control ID
 static const char rcsid[] ATTR_USED = "@(#)prcd.c: version 01-00 95/10/10 00:00:00";
+
+//CD state
+int cd_read_invalid; //DAT_8007ed28
 
 //CD interface
 void CD_Init(void) //FUN_8001a1cc
@@ -69,7 +74,7 @@ int CD_ReadSectors(u8 *buffer, int sectors, int mode) //FUN_8001a818
 		result = CdReadSync(1, NULL);
 	} while (result > 0);
 	
-	return sectors & -(result == 0);
+	return (result == 0) ? sectors : 0;
 }
 
 int CD_Seek(CdlLOC *pos, int offset) //FUN_8001a89c
@@ -95,7 +100,8 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 			if (CD_ReadSectors((u8*)header, 4, mode) == 0 || CD_Seek(&file->pos, 4) == 0)
 				break;
 			
-			//Handle read based off case
+			//Handle read based off header
+			int end_seek;
 			switch (header[0])
 			{
 				case 1: //Tim
@@ -108,20 +114,27 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 					
 					//Read sectors
 					if (CD_ReadSectors(buffer, header[2], mode) == 0)
-						return 0;
-					
-					//Read data
-					for (int i = 0; i < (int)header[1];)
 					{
-						Compo_LoadTim(buffer);
-						u32 len = *headerp;
-						headerp += 5;
-						i++;
-						buffer += len;
+						//Failed to read data
+						end_seek = 0;
+					}
+					else
+					{
+						//Read data
+						for (int i = 0; i < (int)header[1];)
+						{
+							Compo_LoadTim(buffer);
+							u32 len = *headerp;
+							headerp += 5;
+							i++;
+							buffer += len;
+						}
+						
+						Memory_Pop();
+						end_seek = header[2];
 					}
 					
-					Memory_Pop();
-					if (header[1] == 0)
+					if (end_seek == 0)
 						return 0;
 					break;
 				}
@@ -139,30 +152,75 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 					//Read sectors
 					if (CD_ReadSectors(buffer1, header[2], mode) == 0)
 					{
+						//Failed to read data
+						end_seek = 0;
 						Memory_Pop();
 						Memory_Pop();
-						return 0;
 					}
-					
-					//Read data
-					Rap_CloseVab();
-					Rap_Init();
-					if (Rap_OpenVab(buffer1) != 0)
+					else
 					{
-						Rap_VabTransBody(buffer1);
-						Rap_VabTransCompleted(1);
+						//Read data
+						Rap_CloseVab();
+						Rap_Init();
+						if (Rap_OpenVab(buffer1) != 0)
+						{
+							Rap_VabTransBody(buffer1);
+							Rap_VabTransCompleted(1);
+						}
+						
+						Memory_Pop();
+						end_seek = header[2];
 					}
-					
-					Memory_Pop();
-					if (header[2] == 0)
+					if (end_seek == 0)
 						return 0;
 					break;
 				}
-				default:
+				case 3: //Memory
+				{
+					//Allocate buffer according to header
+					u8 *buffer = Memory_Push(header[2] << 11);
+					u8 *bufferp = buffer;
+					if (buffer == NULL)
+						exit(1);
+					
+					//Read sectors
+					if (CD_ReadSectors(buffer, header[2], mode) == 0)
+						return 0;
+					
+					//Read memory
+					int index = Memory_FindIndex(buffer);
+					u32 *headerp = header + 4;
+					
+					if (index != 0)
+					{
+						for (int i = 0; i < (int)header[1];)
+						{
+							if (Memory_PushPoint(bufferp, index + i, headerp[0]))
+								return 0;
+							u32 len = headerp[0];
+							headerp += 5;
+							bufferp += len;
+						}
+					}
+					
+					end_seek = header[2];
+					if (end_seek == 0)
+						return 0;
+					break;
+				}
+				case 0xFFFFFFFF: //Terminator
 				{
 					return 1;
 				}
+				default: //Invalid
+				{
+					cd_read_invalid = 1;
+					return 0;
+				}
 			}
+			
+			//Adjustment seek
+			CD_Seek(&file->pos, end_seek);
 		}
 	}
 	return 0;
