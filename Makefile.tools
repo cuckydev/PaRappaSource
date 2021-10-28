@@ -1,0 +1,8 @@
+TOOLS = tools/syncstrip
+
+all: $(TOOLS)
+
+$(TOOLS):
+	cd $@ && $(MAKE)
+
+.PHONY: all $(TOOLS)

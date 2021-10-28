@@ -1,0 +1,24 @@
+# Exclude files that shouldn't be included
+do.sh
+pcsx.json
+memcard1.mcd
+memcard2.mcd
+license*.dat
+mips/psyq/
+ida/
+iso/
+
+# Exclude executable files
+*.cue
+*.elf
+*.bin
+*.map
+*.ps-exe
+*.exe
+tools/syncstrip/syncstrip
+
+# Exclude object and link files
+*.o
+*.dep
+
+# Big Chungus

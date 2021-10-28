@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Defines the ISO project -->
+<iso_project image_name="parappa.bin" cue_sheet="parappa.cue" no_xa="0">
+	<!-- Data track -->
+	<track type="data">
+		<!-- Identifiers -->
+		<identifiers
+			system        = "PLAYSTATION"
+			application   = "PLAYSTATION"
+			volume        = "PLAYSTATION"
+			volume_set    = ""
+			publisher     = ""
+			copyright     = ""
+		/>
+		<license file="licensea.dat"/>
+		
+		<!-- Data directory tree -->
+		<directory_tree>
+			<file name = "SYSTEM.CNF" type = "data" source = "iso/SYSTEM.CNF"/>
+			<file name = "SCUS_941.83" type = "data" source = "parappa.ps-exe"/>
+			<dir name = "S0">
+				<file name = "COMMON.INT" type = "data" source = "iso/S0/COMMON.INT"/>
+				<file name = "COMOD0.BIN" type = "data" source = "iso/S0/COMOD0.BIN"/>
+				<file name = "COMPO00.INT" type = "data" source = "iso/S0/COMPO00.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S0/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S0/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S9">
+				<file name = "STAGE9.XA1" type = "xa" source = "iso/S9/STAGE9.XA1"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S9/COMMON.INT"/>
+				<file name = "COMOD9.BIN" type = "data" source = "iso/S9/COMOD9.BIN"/>
+				<file name = "COMPO09.INT" type = "data" source = "iso/S9/COMPO09.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S9/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S9/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S8">
+				<file name = "XMOVIE8.STR" type = "mixed" source = "iso/S8/XMOVIE8.STR"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S8/COMMON.INT"/>
+				<file name = "COMOD8.BIN" type = "data" source = "iso/S8/COMOD8.BIN"/>
+				<file name = "COMPO08.INT" type = "data" source = "iso/S8/COMPO08.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S8/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S8/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S7">
+				<file name = "STAGE7.XA1" type = "xa" source = "iso/S7/STAGE7.XA1"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S7/COMMON.INT"/>
+				<file name = "COMOD7.BIN" type = "data" source = "iso/S7/COMOD7.BIN"/>
+				<file name = "COMPO07.INT" type = "data" source = "iso/S7/COMPO07.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S7/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S7/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S6">
+				<file name = "STAGE6.XA1" type = "xa" source = "iso/S6/STAGE6.XA1"/>
+				<file name = "XMOVIE6.STR" type = "mixed" source = "iso/S6/XMOVIE6.STR"/>
+				<file name = "YMOVIE6.STR" type = "mixed" source = "iso/S6/YMOVIE6.STR"/>
+				<file name = "ZMOVIE6.STR" type = "mixed" source = "iso/S6/ZMOVIE6.STR"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S6/COMMON.INT"/>
+				<file name = "COMOD6.BIN" type = "data" source = "iso/S6/COMOD6.BIN"/>
+				<file name = "COMPO06.INT" type = "data" source = "iso/S6/COMPO06.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S6/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S6/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S5">
+				<file name = "STAGE5.XA1" type = "xa" source = "iso/S5/STAGE5.XA1"/>
+				<file name = "XMOVIE5.STR" type = "mixed" source = "iso/S5/XMOVIE5.STR"/>
+				<file name = "YMOVIE5.STR" type = "mixed" source = "iso/S5/YMOVIE5.STR"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S5/COMMON.INT"/>
+				<file name = "COMOD5.BIN" type = "data" source = "iso/S5/COMOD5.BIN"/>
+				<file name = "COMPO05.INT" type = "data" source = "iso/S5/COMPO05.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S5/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S5/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S3">
+				<file name = "STAGE3.XA1" type = "xa" source = "iso/S3/STAGE3.XA1"/>
+				<file name = "XMOVIE3.STR" type = "mixed" source = "iso/S3/XMOVIE3.STR"/>
+				<file name = "YMOVIE3.STR" type = "mixed" source = "iso/S3/YMOVIE3.STR"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S3/COMMON.INT"/>
+				<file name = "COMOD3.BIN" type = "data" source = "iso/S3/COMOD3.BIN"/>
+				<file name = "COMPO03.INT" type = "data" source = "iso/S3/COMPO03.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S3/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S3/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S2">
+				<file name = "STAGE2.XA1" type = "xa" source = "iso/S2/STAGE2.XA1"/>
+				<file name = "XMOVIE2.STR" type = "mixed" source = "iso/S2/XMOVIE2.STR"/>
+				<file name = "YMOVIE2.STR" type = "mixed" source = "iso/S2/YMOVIE2.STR"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S2/COMMON.INT"/>
+				<file name = "COMOD2.BIN" type = "data" source = "iso/S2/COMOD2.BIN"/>
+				<file name = "COMPO02.INT" type = "data" source = "iso/S2/COMPO02.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S2/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S2/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "S1">
+				<file name = "STAGE1.XA1" type = "xa" source = "iso/S1/STAGE1.XA1"/>
+				<file name = "XMOVIE1.STR" type = "mixed" source = "iso/S1/XMOVIE1.STR"/>
+				<file name = "COMMON.INT" type = "data" source = "iso/S1/COMMON.INT"/>
+				<file name = "COMOD1.BIN" type = "data" source = "iso/S1/COMOD1.BIN"/>
+				<file name = "COMPO01.INT" type = "data" source = "iso/S1/COMPO01.INT"/>
+				<file name = "YCOMPO.INT" type = "data" source = "iso/S1/YCOMPO.INT"/>
+				<file name = "ZCOMPO.INT" type = "data" source = "iso/S1/ZCOMPO.INT"/>
+			</dir>
+			<dir name = "SS">
+				<file name = "MOVIE7.STR" type = "mixed" source = "iso/SS/MOVIE7.STR"/>
+				<file name = "MOVIE6.STR" type = "mixed" source = "iso/SS/MOVIE6.STR"/>
+				<file name = "MOVIE5.STR" type = "mixed" source = "iso/SS/MOVIE5.STR"/>
+				<file name = "MOVIE3.STR" type = "mixed" source = "iso/SS/MOVIE3.STR"/>
+				<file name = "MOVIE2.STR" type = "mixed" source = "iso/SS/MOVIE2.STR"/>
+				<file name = "MOVIE1.STR" type = "mixed" source = "iso/SS/MOVIE1.STR"/>
+				<file name = "MOVIE0T.STR" type = "mixed" source = "iso/SS/MOVIE0T.STR"/>
+				<file name = "MOVIE0.STR" type = "mixed" source = "iso/SS/MOVIE0.STR"/>
+			</dir>
+			<file name = "STUFF.DAT" type = "data" source = "iso/STUFF.DAT"/>
+		</directory_tree>
+	</track>
+</iso_project>
