@@ -2,8 +2,6 @@
 
 #include <libetc.h>
 
-#include <stdio.h>
-
 #include "prcompo.h"
 #include "prmemory.h"
 #include "prrap.h"

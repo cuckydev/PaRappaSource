@@ -4,17 +4,39 @@
 #include <libgpu.h>
 #include <libgs.h>
 
+#include <libetc.h>
+
 //Version control ID
 static const char rcsid[] ATTR_USED = "@(#)prcompo.c: version 01-00 95/10/10 00:00:00";
 
 //Compo interface
+void Compo_LoadTim_2(u8 *buffer, int palette) //FUN_8001adec
+{
+	RECT rect;
+	
+	//Get image information
+	GsIMAGE image;
+	GsGetTimInfo((u_long*)(buffer + 4), &image);
+	
+	//Load texture
+	rect.x = image.px;
+	rect.y = image.py;
+	rect.w = image.pw;
+	rect.h = image.ph;
+	LoadImage(&rect, image.pixel);
+	
+	//Load palette
+	if (palette && ((image.pmode >> 3) & 1) != 0)
+		LoadClut2(image.clut, image.cx, image.cy);
+}
+
 void Compo_LoadTim(u8 *buffer) //FUN_8001ae7c
 {
 	RECT rect;
 	
 	//Get image information
 	GsIMAGE image;
-	GsGetTimInfo(buffer + 4, &image);
+	GsGetTimInfo((u_long*)(buffer + 4), &image);
 	
 	//Load texture
 	rect.x = image.px;
@@ -38,7 +60,7 @@ void Compo_LoadTim(u8 *buffer) //FUN_8001ae7c
 
 void Compo_ClearScreen(u8 r, u8 g, u8 b) //FUN_8001b1b0
 {
-	RECT dst = {0, 0, 320, 240};
+	RECT dst = {0, 0, 320, 480};
 	ClearImage(&dst, r, g, b);
 }
 

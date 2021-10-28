@@ -7,5 +7,6 @@
 extern CD_File vdata_s0_common_int;
 extern CD_File vdata_ss_movie0_str;
 extern CD_File vdata_s0_ycompo_int;
+extern CD_File vdata_s0_zcompo_int;
 
 #endif

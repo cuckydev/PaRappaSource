@@ -26,6 +26,11 @@ void Rap_Init(void) //FUN_80026e4c
 	//DAT_800943b4 = 0;
 }
 
+void Rap_StopSeq(void) //FUN_80026fa4
+{
+	SsUtAllKeyOff(0);
+}
+
 int Rap_OpenVab(u8 *buffer) //FUN_80027078
 {
 	rap_vab = SsVabOpenHead(buffer, -1);
