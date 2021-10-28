@@ -1,5 +1,10 @@
 #include "prcd.h"
 
+#include <libetc.h>
+
+#include "prcompo.h"
+#include "prmemory.h"
+
 //Version control ID
 static const char rcsid[] ATTR_USED = "@(#)prcd.c: version 01-00 95/10/10 00:00:00";
 
@@ -46,6 +51,26 @@ int CD_File_Find(CD_File *cd_file) //FUN_8001a324
 	return 0;
 }
 
+int CD_ReadSectors(u32 *buffer, int sectors, int mode) //FUN_8001a818
+{
+	int result;
+	
+	//Read sectors
+	do
+	{
+		result = CdRead(sectors, (u_long*)buffer, (mode == 1) * CdlModeSpeed);
+	} while (result == 0);
+	
+	//Sync
+	VSync(3);
+	do
+	{
+		result = CdReadSync(1, NULL);
+	} while (result > 0);
+	
+	return sectors & -(result == 0);
+}
+
 int CD_Seek(CdlLOC *pos, int offset) //FUN_8001a89c
 {
 	//Offset then seek
@@ -53,29 +78,78 @@ int CD_Seek(CdlLOC *pos, int offset) //FUN_8001a89c
 	return CdControlB(CdlSetloc, (u_char*)pos, NULL) != 0;
 }
 
-int CD_Read(CdlFILE *file, int result, int offset) //FUN_8001a8f0
+int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 {
 	//Seek to file
-	CD_Seek(&file->pos, offset);
+	if (CD_Seek(&file->pos, offset) != 0)
+	{
+		while (1)
+		{
+			//Allocate 4 sector header
+			u32 *header = Memory_EndAlloc(2048 * 4);
+			if (header == NULL)
+				exit(1);
+			
+			//Read sectors and reseek(?)
+			if (CD_ReadSectors(header, 4, mode) == 0 || CD_Seek(&file->pos, 4) == 0)
+				break;
+			
+			//Handle read based off case
+			switch (header[0])
+			{
+				case 1: //Tim
+				{
+					//Allocate buffer according to header
+					u32 *buffer = Memory_Push(header[2] << 11);
+					u32 *headerp = header + 4;
+					if (buffer == NULL)
+						exit(1);
+					
+					//Read sectors
+					if (CD_ReadSectors(buffer, header[2], mode) == 0)
+						return 0;
+					
+					//Read data
+					for (int i = 0; i < (int)header[1];)
+					{
+						Compo_LoadTim(buffer);
+						u32 len = *headerp;
+						headerp += 5;
+						i++;
+						buffer = (u32*)((u8*)buffer + len);
+					}
+					
+					Memory_Pop();
+					if (header[1] == 0)
+						return 0;
+					break;
+				}
+				default:
+				{
+					return 1;
+				}
+			}
+		}
+	}
 	return 0;
 }
 
 int CD_File_Read(CD_File *cd_file, int offset) //FUN_8001ac18
 {
 	//Attempt to read 4 times
-	int result = 1;
+	int mode = 1;
 	for (int i = 0; i < 4; i++)
 	{
 		//Find file
 		if (i > 0)
-			result = 0;
+			mode = 0; //Use 1x read if we've failed to read before
 		if (CD_File_Find(cd_file) >= 0)
 		{
 			//Read file data
 			CdlFILE file = cd_file->file;
-			if ((result = CD_Read(&file, result, offset)) == 1)
+			if ((mode = CD_Read(&file, mode, offset)) == 1)
 				return 1;
 		}
 	}
-	return result;
+	return mode;
 }

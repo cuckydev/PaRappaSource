@@ -99,6 +99,7 @@ void System_Init(void) //FUN_800154f4
 void Stage0_Load(void)
 {
 	CD_File_Read(&vdata_s0_common_int, 0);
+	CD_File_Read(&vdata_s0_ycompo_int, 0);
 }
 
 //Game loop function

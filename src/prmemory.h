@@ -6,7 +6,8 @@
 //Memory interface
 void Memory_Init(void); //FUN_80025a00
 void Memory_Reset(void); //FUN_80025a34
-u_char *Memory_Alloc(int size); //FUN_80025a70
-u_char *Memory_EndAlloc(int size); //FUN_80025b28
+void *Memory_Push(int size); //FUN_80025a70
+void Memory_Pop(void); //FUN_80025a70
+void *Memory_EndAlloc(int size); //FUN_80025b28
 
 #endif

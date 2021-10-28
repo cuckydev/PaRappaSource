@@ -4,17 +4,17 @@
 static const char rcsid[] ATTR_USED = "@(#)prmemory.c: version 01-00 95/10/10 00:00:00";
 
 //Memory state
-u_char *memory_endstart; //DAT_8007eb80
+u8 *memory_endstart; //DAT_8007eb80
 int memory_ptr_i; //DAT_8007eb84
 
-u_char *memory_start; //DAT_8007edc0
-u_char *memory_end;   //DAT_8007edc4
-u_char *memory_point; //DAT_8007edc8
+u8 *memory_start; //DAT_8007edc0
+u8 *memory_end;   //DAT_8007edc4
+u8 *memory_point; //DAT_8007edc8
 
-u_char *memory_ptr[0x400]; //DAT_80090858
+u8 *memory_ptr[0x400]; //DAT_80090858
 int DAT_80091858;
 
-u_char memory_buffer[0x12D000]; //DAT_800965b0
+u8 memory_buffer[0x12D000]; //DAT_800965b0
 
 //Memory interface
 void Memory_Init(void) //FUN_80025a00
@@ -34,7 +34,7 @@ void Memory_Reset(void) //FUN_80025a34
 	Memory_Init();
 }
 
-u_char *Memory_Alloc(int size) //FUN_80025a70
+void *Memory_Push(int size) //FUN_80025a70
 {
 	if (memory_ptr_i < (int)COUNT_OF(memory_ptr))
 	{
@@ -46,7 +46,7 @@ u_char *Memory_Alloc(int size) //FUN_80025a70
 				alloc_size = size + 14; //I'm pretty sure this is supposed to be 15
 			
 			//Check if this will overlap the allocated heap
-			u_char *point = memory_point + ((alloc_size >> 3) << 3);
+			u8 *point = memory_point + ((alloc_size >> 3) << 3);
 			
 			if (point < memory_end)
 			{
@@ -54,16 +54,23 @@ u_char *Memory_Alloc(int size) //FUN_80025a70
 				memory_ptr[++memory_ptr_i] = memory_point; //The index is mistakenly pre-incremented
 				
 				//Return pointer
-				u_char *result = memory_point;
+				u8 *result = memory_point;
 				memory_point = point;
-				return result;
+				return (void*)result;
 			}
 		}
 	}
 	return NULL;
 }
 
-u_char *Memory_EndAlloc(int size) //FUN_80025b28
+void Memory_Pop(void) //FUN_80025af8
+{
+	memory_point = memory_ptr[memory_ptr_i];
+	memory_ptr[memory_ptr_i] = NULL;
+	memory_ptr_i--;
+}
+
+void *Memory_EndAlloc(int size) //FUN_80025b28
 {
 	//Get alloc size
 	int alloc_size = size + 7;
@@ -71,7 +78,7 @@ u_char *Memory_EndAlloc(int size) //FUN_80025b28
 		alloc_size = size + 14; //I'm pretty sure this is supposed to be 15
 	
 	//Check if this will overlap main allocated memory
-	u_char *point = memory_end - ((alloc_size >> 3) << 3);
+	u8 *point = memory_end - ((alloc_size >> 3) << 3);
 	if ((memory_point + ((alloc_size >> 3) << 3)) < memory_end)
 	{
 		if (memory_endstart < point) //I don't think this is working as intended, thus is basically unused
@@ -82,5 +89,5 @@ u_char *Memory_EndAlloc(int size) //FUN_80025b28
 		point = NULL;
 	}
 	
-	return point;
+	return (void*)point;
 }

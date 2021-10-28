@@ -3,6 +3,7 @@ TYPE = ps-exe
 
 SRCS = \
 	src/prcd.c \
+	src/prcompo.c \
 	src/prvdatal.c \
 	src/prmain.c \
 	src/prmemory.c \
