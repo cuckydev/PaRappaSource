@@ -1,6 +1,10 @@
 TARGET = parappa
 TYPE = ps-exe
 
+ifeq ($(UB), 1)
+	CPPFLAGS += -DPARAPPA_UB
+endif
+
 SRCS = \
 	src/prcd.c \
 	src/prcompo.c \
