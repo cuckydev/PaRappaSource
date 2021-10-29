@@ -1,9 +1,5 @@
 #include "prcompo.h"
 
-#include <libgte.h>
-#include <libgpu.h>
-#include <libgs.h>
-
 #include <libetc.h>
 
 //Version control ID
@@ -13,7 +9,7 @@ static const char rcsid[] ATTR_USED = "@(#)prcompo.c: version 01-00 95/10/10 00:
 int compo_activebuff;
 GsOT compo_ot[2];
 GsOT_TAG compo_tag[2][0x10];
-PACKET compo_work[2][4];
+PACKET *compo_work[2];
 
 //Compo interface
 void Compo_LoadTim_2(u8 *buffer, int palette) //FUN_8001adec
@@ -68,6 +64,36 @@ void Compo_ClearScreen(u8 r, u8 g, u8 b) //FUN_8001b1b0
 {
 	RECT dst = {0, 0, 320, 480};
 	ClearImage(&dst, r, g, b);
+}
+
+void Compo_SetSprite(GsSPRITE *sprite, const CompoSprite *compo_sprite, int shift, int shift_pal) //FUN_8001b25c
+{
+	sprite->attribute = compo_sprite->attribute;
+	sprite->w = compo_sprite->width;
+	sprite->h = compo_sprite->height;
+	
+	u32 uv_x = (compo_sprite->tex_x * 4) + (shift * compo_sprite->width);
+	sprite->tpage = GetTPage(0, 1, (uv_x & 0xFF00) >> 2, compo_sprite->tex_y & 0xFF00);
+	sprite->u = uv_x;
+	sprite->v = compo_sprite->tex_y;
+	
+	sprite->cx = compo_sprite->pal_x;
+	if (shift_pal == 0)
+		sprite->cy = compo_sprite->pal_y;
+	else
+		sprite->cy = compo_sprite->pal_y + shift;
+}
+
+void Compo_FastSprite(s16 x, s16 y, const CompoSprite *compo_sprite, int shift, int shift_pal, u16 pri, GsOT *ot) //FUN_8001b590
+{
+	//Set sprite
+	GsSPRITE sprite;
+	sprite.x = x - 160;
+	sprite.y = y - 120;
+	Compo_SetSprite(&sprite, compo_sprite, shift, shift_pal);
+	
+	//Sort sprite into ot
+	GsSortFastSprite(&sprite, ot, pri);
 }
 
 u8 tim_sony[] = {
@@ -198,6 +224,29 @@ void Compo_Sony_Display(int i) //FUN_8001e408
 		Compo_Sony_FadeLoad(0x340, 0x1FF, i);
 	if (i >= 120 && i < 150)
 		Compo_Sony_FadeLoad(0x340, 0x1FF, 149 - i);
+	
+	//Display Sony logo
+	static const CompoSprite sprite_sony_0 = {
+		GsAONE | GsLOFF,
+		0x280, 0x1DE,
+		0xD8, 0xF,
+		0x340, 0x1FF
+	};
+	static const CompoSprite sprite_sony_1 = {
+		GsAONE | GsLOFF,
+		0x280, 0x1EE,
+		0x3C, 0xC,
+		0x340, 0x1FF
+	};
+	static const CompoSprite sprite_sony_2 = {
+		GsAONE | GsLOFF,
+		0x29B, 0x1EE,
+		0x40, 0xC,
+		0x340, 0x1FF
+	};
+	Compo_FastSprite( 20, 106, &sprite_sony_0, 0, 0, 0, &compo_ot[compo_activebuff]);
+	Compo_FastSprite(240, 106, &sprite_sony_1, 0, 0, 0, &compo_ot[compo_activebuff]);
+	Compo_FastSprite(128, 122, &sprite_sony_2, 0, 0, 0, &compo_ot[compo_activebuff]);
 }
 
 void Compo_Sony_Flip(void) //FUN_8001e54c
