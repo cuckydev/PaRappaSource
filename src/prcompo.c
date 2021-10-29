@@ -188,7 +188,7 @@ void Compo_Masaya_Init(void) //FUN_8001c1b8
 	Compo_Masaya_FadeInit();
 }
 
-void Compo_Init1(void) //FUN_8001c470
+void Compo_InitGs(void) //FUN_8001c470
 {
 	//FUN_8001c1e8();
 	ResetGraph(0);
@@ -266,9 +266,25 @@ void Compo_Masaya_Display(int i) //FUN_8001e5a4
 	
 	//Load palette
 	if (i < 30)
-		Compo_Masaya_FadeLoad(0x340, 0x1FF, i);
+		Compo_Masaya_FadeLoad(0x300, 0x1FF, i);
 	if (i >= 120 && i < 150)
-		Compo_Masaya_FadeLoad(0x340, 0x1FF, 149 - i);
+		Compo_Masaya_FadeLoad(0x300, 0x1FF, 149 - i);
+	
+	//Display Masaya logo
+	static const CompoSprite sprite_masaya_0 = {
+		GsALON | GsAONE | 0x1000000 | GsLOFF,
+		0x300, 0x171,
+		0x8E, 0x42,
+		0x300, 0x1FF
+	};
+	static const CompoSprite sprite_masaya_1 = {
+		GsALON | GsAONE | 0x1000000 | GsLOFF,
+		0x300, 0x1B3,
+		0x8C, 0x3C,
+		0x300, 0x1FF
+	};
+	Compo_FastSprite( 21, 103, &sprite_masaya_0, 0, 0, 0, &compo_ot[compo_activebuff]);
+	Compo_FastSprite(163, 103, &sprite_masaya_1, 0, 0, 0, &compo_ot[compo_activebuff]);
 }
 
 void Compo_Masaya_Flip(void) //FUN_8001e6b0
@@ -277,7 +293,7 @@ void Compo_Masaya_Flip(void) //FUN_8001e6b0
 	Compo_Sony_Flip();
 }
 
-void Compo_Init2(void) //FUN_8001e6d0
+void Compo_InitOt(void) //FUN_8001e6d0
 {
 	//Initialize ordering tables
 	for (int i = 0; i < 2; i++)
@@ -286,10 +302,11 @@ void Compo_Init2(void) //FUN_8001e6d0
 		compo_ot[i].length = 4;
 		compo_ot[i].offset = 0;
 	}
+	//FUN_8001e33c()
 }
 
 void Compo_Init(void) //FUN_8001ed94
 {
-	Compo_Init1();
-	Compo_Init2();
+	Compo_InitGs();
+	Compo_InitOt();
 }

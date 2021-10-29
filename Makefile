@@ -6,6 +6,7 @@ ifeq ($(UB), 1)
 endif
 
 SRCS = \
+	src/prapp.c \
 	src/prcd.c \
 	src/prcompo.c \
 	src/prvdatal.c \

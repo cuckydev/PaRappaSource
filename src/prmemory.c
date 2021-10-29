@@ -30,7 +30,8 @@ void Memory_Init(void) //FUN_80025a00
 void Memory_Reset(void) //FUN_80025a34
 {
 	//Clear memory pointers and reset memory state
-	memset(memory_ptr, 0, sizeof(memory_ptr));
+	for (int i = (int)COUNT_OF(memory_ptr) - 1; i >= 0; i--)
+		memory_ptr[i] = NULL;
 	Memory_Init();
 }
 

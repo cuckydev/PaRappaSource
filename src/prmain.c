@@ -15,6 +15,11 @@
 //Version control ID
 static const char rcsid[] ATTR_USED = "@(#)prmain.c: version 01-00 95/10/10 00:00:00";
 
+//Game state
+u16 game_debug;
+
+u16 game_loopreload;
+
 //Debug functions
 void Debug_LoadFont(void)
 {
@@ -39,7 +44,7 @@ void System_Init(void) //FUN_800154f4
 }
 
 //Game functions
-void Game_Screen_In(void (*display)(int i), void (*flip)(void), void (*init)(void))
+void Game_Screen_In(void (*display)(int i), void (*flip)(void), void (*init)(void)) //FUN_80015a4c
 {
 	init();
 	for (int i = 0; i < 30; i++)
@@ -50,7 +55,7 @@ void Game_Screen_In(void (*display)(int i), void (*flip)(void), void (*init)(voi
 	}
 }
 
-void Game_Wait(int time_a, int time_b)
+void Game_Wait(int time_a, int time_b) //FUN_80015b00
 {
 	//Wait force time
 	u32 timer;
@@ -70,7 +75,7 @@ void Game_Wait(int time_a, int time_b)
 	}
 }
 
-void Game_Screen_Out(void (*display)(int i), void (*flip)(void))
+void Game_Screen_Out(void (*display)(int i), void (*flip)(void)) //FUN_80015c20
 {
 	for (int i = 120; i < 150; i++)
 	{
@@ -80,7 +85,19 @@ void Game_Screen_Out(void (*display)(int i), void (*flip)(void))
 	}
 }
 
-void Game_Opening(void)
+void Game_CheckDebug(void) //FUN_80016ab4
+{
+	//Wait a moment, polling input
+	u32 check = 0;
+	for (int i = 0; i < 30 && ((check = PadRead(1)) == 0); i++)
+		VSync(0);
+	
+	//Check debug input
+	if (check != 0 && check == (PADL2 | PADR2 | PADL1 | PADR1 | PADRup | PADselect))
+		game_debug = 1;
+}
+
+void Game_Opening(void) //FUN_80016b84
 {
 	//Load menu assets
 	Memory_Reset();
@@ -105,7 +122,30 @@ void Game_Opening(void)
 
 void Game_Loop(void) //FUN_80027fac
 {
+	//Run opening
 	Game_Opening();
+	Game_CheckDebug();
+	
+	//Game loop
+	int mode_prev = 0, mode = 0;
+	game_loopreload = 0;
+	
+	while (1)
+	{
+		//Check for reload
+		if (game_loopreload == 1)
+		{
+			game_loopreload = 0;
+			if (mode == 0)
+				gamemode_prev = 0;
+			//FUN_8001ef14();
+			//mode = FUN_80015788(mode_prev);
+			mode_prev = mode;
+		}
+		
+		//Start mode
+		Memory_Reset();
+	}
 }
 
 //Entry point
