@@ -184,6 +184,7 @@ SECTIONS {
     __bss_end = .;
 
     __heap_start = __heap_base;
+    __heap_size = (__ram_top - __heap_start);
 	
 	. = ADDR(.text) - 0x800;
     __end = .;

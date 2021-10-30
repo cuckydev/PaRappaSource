@@ -7,15 +7,17 @@ endif
 
 SRCS = \
 	src/prapp.c \
+	src/prmenu.c \
 	src/prcd.c \
 	src/prcompo.c \
 	src/prvdatal.c \
 	src/prmain.c \
 	src/prmemory.c \
 	src/prrap.c \
+	src/prvtext.c \
 	mips/common/crt0/crt0.s
 
-CPPFLAGS += -Wall -Wextra -pedantic -mno-check-zero-division
+CPPFLAGS += -Wall -Wextra -pedantic
 LDFLAGS += -Wl,--start-group
 # TODO: remove unused libraries
 LDFLAGS += -lapi

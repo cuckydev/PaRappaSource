@@ -1,1 +1,1 @@
-__heap_base     = __bss_end;
+__heap_base     = 0x801C3870;
