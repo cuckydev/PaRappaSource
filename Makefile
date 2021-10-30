@@ -6,18 +6,22 @@ ifeq ($(UB), 1)
 endif
 
 SRCS = \
-	src/prapp.c \
-	src/prmenu.c \
-	src/prcd.c \
-	src/prcompo.c \
-	src/prvdatal.c \
-	src/prmain.c \
-	src/prmemory.c \
-	src/prrap.c \
-	src/prvtext.c \
+	src/boot/prapp.c \
+	src/boot/prmenu.c \
+	src/boot/prcd.c \
+	src/boot/prcompo.c \
+	src/boot/prvdatal.c \
+	src/boot/prmain.c \
+	src/boot/prmemory.c \
+	src/boot/prrap.c \
+	src/boot/prvtext.c \
+	src/scn0/prscn0.c \
 	mips/common/crt0/crt0.s
 
-CPPFLAGS += -Wall -Wextra -pedantic
+OVERLAYSCRIPT  ?= overlay.ld
+OVERLAYSECTION ?= .scn0
+
+CPPFLAGS += -Wall -Wextra -pedantic -Isrc/
 LDFLAGS += -Wl,--start-group
 # TODO: remove unused libraries
 LDFLAGS += -lapi

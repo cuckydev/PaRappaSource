@@ -1,5 +1,5 @@
-#ifndef PARAPPA_GUARD_MENU_H
-#define PARAPPA_GUARD_MENU_H
+#ifndef PARAPPA_GUARD_BOOT_MENU_H
+#define PARAPPA_GUARD_BOOT_MENU_H
 
 #include "psx.h"
 

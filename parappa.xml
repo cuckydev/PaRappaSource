@@ -21,7 +21,7 @@
 			<file name = "SCUS_941.83" type = "data" source = "parappa.ps-exe"/>
 			<dir name = "S0">
 				<file name = "COMMON.INT" type = "data" source = "iso/S0/COMMON.INT"/>
-				<file name = "COMOD0.BIN" type = "data" source = "iso/S0/COMOD0.BIN"/>
+				<file name = "COMOD0.BIN" type = "data" source = "Overlay.scn0"/>
 				<file name = "COMPO00.INT" type = "data" source = "iso/S0/COMPO00.INT"/>
 				<file name = "YCOMPO.INT" type = "data" source = "iso/S0/YCOMPO.INT"/>
 				<file name = "ZCOMPO.INT" type = "data" source = "iso/S0/ZCOMPO.INT"/>

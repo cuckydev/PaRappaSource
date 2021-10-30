@@ -15,6 +15,7 @@ iso/
 *.map
 *.ps-exe
 *.exe
+/Overlay.*
 tools/syncstrip/syncstrip
 
 # Exclude object and link files

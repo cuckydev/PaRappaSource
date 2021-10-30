@@ -1,1 +1,1 @@
-__heap_base     = 0x801C3870;
+__heap_base = 0x801C3870;

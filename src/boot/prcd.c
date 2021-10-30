@@ -55,14 +55,14 @@ int CD_File_Find(CD_File *cd_file) //FUN_8001a324
 	return 0;
 }
 
-int CD_ReadSectors(u8 *buffer, int sectors, int mode) //FUN_8001a818
+int CD_ReadSectors(u_long *buffer, int sectors, int mode) //FUN_8001a818
 {
 	int result;
 	
 	//Read sectors
 	do
 	{
-		result = CdRead(sectors, (u_long*)buffer, (mode == 1) * CdlModeSpeed);
+		result = CdRead(sectors, buffer, (mode == 1) * CdlModeSpeed);
 	} while (result == 0);
 	
 	//Sync
@@ -95,7 +95,7 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 				exit(1);
 			
 			//Read sectors and reseek(?)
-			if (CD_ReadSectors((u8*)header, 4, mode) == 0 || CD_Seek(&file->pos, 4) == 0)
+			if (CD_ReadSectors(header, 4, mode) == 0 || CD_Seek(&file->pos, 4) == 0)
 				break;
 			
 			//Handle read based off header
@@ -111,7 +111,7 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 						exit(1);
 					
 					//Read sectors
-					if (CD_ReadSectors(buffer, header[2], mode) == 0)
+					if (CD_ReadSectors((u_long*)buffer, header[2], mode) == 0)
 					{
 						//Failed to read data
 						end_seek = 0;
@@ -148,7 +148,7 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 						exit(1);
 					
 					//Read sectors
-					if (CD_ReadSectors(buffer1, header[2], mode) == 0)
+					if (CD_ReadSectors((u_long*)buffer1, header[2], mode) == 0)
 					{
 						//Failed to read data
 						end_seek = 0;
@@ -182,7 +182,7 @@ int CD_Read(CdlFILE *file, int mode, int offset) //FUN_8001a8f0
 						exit(1);
 					
 					//Read sectors
-					if (CD_ReadSectors(buffer, header[2], mode) == 0)
+					if (CD_ReadSectors((u_long*)buffer, header[2], mode) == 0)
 						return 0;
 					
 					//Read memory
@@ -238,6 +238,29 @@ int CD_File_Read(CD_File *cd_file, int offset) //FUN_8001ac18
 			//Read file data
 			CdlFILE file = cd_file->file;
 			if ((mode = CD_Read(&file, mode, offset)) == 1)
+				return 1;
+		}
+	}
+	return mode;
+}
+
+int CD_File_ReadRaw(CD_File *cd_file, u_long *to) //FUN_8001acf8
+{
+	//Attempt to read 4 times
+	int mode = 1;
+	for (int i = 0; i < 4; i++)
+	{
+		//Find file
+		if (i > 0)
+			mode = 0; //Use 1x read if we've failed to read before
+		if (CD_File_Find(cd_file) >= 0)
+		{
+			//Read file data
+			CdlFILE file = cd_file->file;
+			int sectors = (file.size + 0x7FF) >> 11;
+			
+			CD_Seek(&file.pos, 0);
+			if (CD_ReadSectors(to, sectors, mode) == sectors)
 				return 1;
 		}
 	}

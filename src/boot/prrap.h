@@ -1,5 +1,5 @@
-#ifndef PARAPPA_GUARD_PRRAP_H
-#define PARAPPA_GUARD_PRRAP_H
+#ifndef PARAPPA_GUARD_BOOT_PRRAP_H
+#define PARAPPA_GUARD_BOOT_PRRAP_H
 
 #include "psx.h"
 
